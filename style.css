@@ -4,11 +4,13 @@
     font-family: ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
 }
 
+/* Styling header section  */
 #navbar{
     background-color: black;
     display: flex;
     align-items: center;
     color: white;
+    height: 50px;
 }
 
 #navbar ul{
@@ -32,6 +34,41 @@
 }
 
 #logo img{
-    margin: 0px 15px;
+    margin: 0px 10px;
+    cursor: pointer;
+}
+
+/* Styling main section which contains musics and start and stop button */
+
+.container{
+    min-height: 75vh;
+    width: 70%;
+    background-color: black;
+    color: white;
+    margin: 20px auto;
+    border-radius: 10px;
+    background-image: url("bg.jpg");
+    background-position: center;
+}
+
+.bottom{
+    height: 100px;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+input[id="myProgressBar"]{
+    width: 80vw;
+}
+
+.icons{
+    margin: 15px;
+}
+
+.icons i{
     cursor: pointer;
 }
