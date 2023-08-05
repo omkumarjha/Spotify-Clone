@@ -1,10 +1,11 @@
-let songIndex = 0; // abhi 0th song ko process kar rahe hai 
+let songIndex = 1; // abhi 0th song ko process kar rahe hai 
 
-let audioElement = new Audio("songs/Get Ready To Fight.mp3");
+let audioElement = new Audio("songs/1.mp3");
 let masterPlay = document.getElementById("masterPlay")
 let myProgressBar = document.getElementById("myProgressBar");
 let gif = document.getElementById("gif");
 let songItems = document.getElementsByClassName("songItem");
+let songitemPlay = document.getElementsByClassName("songitemPlay");
 
 myProgressBar.value = 0; // jaise uper pehli baar website pe aayega to usse progress baar 0 mai milega
 
@@ -15,12 +16,16 @@ masterPlay.addEventListener("click",function(){
         masterPlay.classList.remove("fa-play-circle")
         masterPlay.classList.add("fa-pause-circle")
         gif.style.opacity = 1;
+        let e = document.getElementById(`${songIndex}`);
+        e.classList.remove("fa-play-circle")
+        e.classList.add("fa-pause-circle");
     }
     else{
         audioElement.pause();
         masterPlay.classList.remove("fa-pause-circle")
         masterPlay.classList.add("fa-play-circle")
         gif.style.opacity = 0;
+        makeAllPause();
     }
 })
 
@@ -40,15 +45,15 @@ myProgressBar.addEventListener("change",function(){
 
 // below array har eak song ka name , path and uska logo contain karta hai 
 let songs = [
-    {songName : "Get Ready To Fight",filePath : "songs/Get Ready To Fight.mp3", coverPath : "covers/bagghi.jpg"},
-    {songName : "Besabriyan - MS Dhoni",filePath : "songs/besabriyan.mp3", coverPath : "covers/besabriyan.jpg"},
-    {songName : "Brother Anthem",filePath : "songs/brotherAnthem.mp3", coverPath : "covers/Brother.jpg"},
-    {songName : "Chak Lein De",filePath : "songs/Chak Lein De.mp3", coverPath : "covers/chak lein de.jpg"},
-    {songName : "Sulthan - KGF",filePath : "songs/Sultan Kgf.mp3", coverPath : "covers/KGF.jpg"},
-    {songName : "Tu Bhag Milkha",filePath : "songs/TuBhagMilkha.mp3", coverPath : "covers/milkha.jpg"},
-    {songName : "Parwa Nahin",filePath : "songs/Parwah Nahin.mp3", coverPath : "covers/parwah nahin.jpg"},
-    {songName : "Kar har Maidan Fateh",filePath : "songs/Kar Maidan.mp3", coverPath : "covers/sanju.jpg"},
-    {songName : "Sutan - Premium",filePath : "songs/Sultan.mp3", coverPath : "covers/sultan.jpg"},
+    {songName : "Get Ready To Fight",filePath : "songs/1.mp3", coverPath : "covers/1.jpg"},
+    {songName : "Besabriyan - MS Dhoni",filePath : "songs/2.mp3", coverPath : "covers/2.jpg"},
+    {songName : "Brother Anthem",filePath : "songs/3.mp3", coverPath : "covers/3.jpg"},
+    {songName : "Chak Lein De",filePath : "songs/4.mp3", coverPath : "covers/4.jpg"},
+    {songName : "Sulthan - KGF",filePath : "songs/5.mp3", coverPath : "covers/5.jpg"},
+    {songName : "Tu Bhag Milkha",filePath : "songs/6.mp3", coverPath : "covers/6.jpg"},
+    {songName : "Parwa Nahin",filePath : "songs/7.mp3", coverPath : "covers/7.jpg"},
+    {songName : "Kar har Maidan Fateh",filePath : "songs/8.mp3", coverPath : "covers/8.jpg"},
+    {songName : "Sutan - Premium",filePath : "songs/9.mp3", coverPath : "covers/9.jpg"},
 ]
 
 // Iterating to every song item and setting its name , song and its cover
@@ -56,3 +61,84 @@ Array.from(songItems).forEach(function(element,index){
     element.getElementsByTagName("img")[0].src = songs[index].coverPath;
     element.getElementsByClassName("songName")[0].innerText = songs[index].songName;
 })
+
+
+// Individual song item ke start and stop button pe click karne wala logic below mai hai 
+
+const makeAllPause = ()=>{
+    Array.from(songitemPlay).forEach((element)=>{
+        element.classList.remove("fa-pause-circle")
+        element.classList.add("fa-play-circle");
+    })
+}
+
+Array.from(songitemPlay).forEach((element)=>{
+    element.addEventListener("click",function(e){
+        let alreadyPlay = e.target.classList.contains("fa-pause-circle");
+
+        makeAllPause();
+
+        songIndex = parseInt(e.target.id)
+        audioElement.src = `songs/${songIndex}.mp3`;
+
+        if(alreadyPlay){ // agar jispe click kara hai woh already play ho raha hai to usko band karo 
+            e.target.classList.remove("fa-pause-circle")
+            e.target.classList.add("fa-play-circle");
+            audioElement.pause();
+        }
+        else{ // agar already play nhi ho raha to play karo 
+            e.target.classList.remove("fa-play-circle")
+            e.target.classList.add("fa-pause-circle");
+            audioElement.play();
+            masterPlay.classList.remove("fa-play-circle");
+            masterPlay.classList.add("fa-pause-circle");
+        }
+        // hum play karna bolte hai to class ke hisab se pause karna hota hai and vice versa .
+    })
+})
+
+
+document.getElementById("previous").addEventListener("click",function(){
+    if(songIndex == 1){
+        songIndex = 9;
+    }
+    else{
+        songIndex -= 1;
+    }
+    makeAllPause();
+    let e = document.getElementById(`${songIndex}`);
+
+    audioElement.src = `songs/${songIndex}.mp3`;
+    e.classList.remove("fa-play-circle")
+    e.classList.add("fa-pause-circle");
+    audioElement.play();
+    masterPlay.classList.remove("fa-play-circle");
+    masterPlay.classList.add("fa-pause-circle");
+})
+
+document.getElementById("next").addEventListener("click",function(){
+
+    if(songIndex == 9){
+        songIndex = 1;
+    }
+    else{
+        songIndex += 1;
+    }
+    makeAllPause();
+    let e = document.getElementById(`${songIndex}`);
+
+    audioElement.src = `songs/${songIndex}.mp3`;
+    e.classList.remove("fa-play-circle")
+    e.classList.add("fa-pause-circle");
+    audioElement.play();
+    masterPlay.classList.remove("fa-play-circle");
+    masterPlay.classList.add("fa-pause-circle");
+})
+
+// below event tak triggeer hoga jab song finish ho jayega
+audioElement.addEventListener("ended", function(){
+    audioElement.currentTime = 0;
+    makeAllPause();
+    masterPlay.classList.remove("fa-pause-circle")
+    masterPlay.classList.add("fa-play-circle")
+});
