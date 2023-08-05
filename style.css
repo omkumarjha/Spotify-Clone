@@ -105,3 +105,13 @@ input[id="myProgressBar"] {
     cursor: pointer;
     margin-left: 5px;
 }
+
+.songInfo{
+    position: absolute;
+    left: 14vw;
+}
+
+.songInfo img{
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
