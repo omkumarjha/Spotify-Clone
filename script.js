@@ -6,6 +6,7 @@ let myProgressBar = document.getElementById("myProgressBar");
 let gif = document.getElementById("gif");
 let songItems = document.getElementsByClassName("songItem");
 let songitemPlay = document.getElementsByClassName("songitemPlay");
+let songInfoName = document.getElementsByClassName("songInfoName")[0];
 
 myProgressBar.value = 0; // jaise uper pehli baar website pe aayega to usse progress baar 0 mai milega
 
@@ -85,6 +86,9 @@ Array.from(songitemPlay).forEach((element)=>{
             e.target.classList.remove("fa-pause-circle")
             e.target.classList.add("fa-play-circle");
             audioElement.pause();
+            gif.style.opacity = 0;
+            masterPlay.classList.remove("fa-pause-circle")
+            masterPlay.classList.add("fa-play-circle")
         }
         else{ // agar already play nhi ho raha to play karo 
             e.target.classList.remove("fa-play-circle")
@@ -92,6 +96,7 @@ Array.from(songitemPlay).forEach((element)=>{
             audioElement.play();
             masterPlay.classList.remove("fa-play-circle");
             masterPlay.classList.add("fa-pause-circle");
+            gif.style.opacity = 1;
         }
         // hum play karna bolte hai to class ke hisab se pause karna hota hai and vice versa .
     })
@@ -137,8 +142,25 @@ document.getElementById("next").addEventListener("click",function(){
 
 // below event tak triggeer hoga jab song finish ho jayega
 audioElement.addEventListener("ended", function(){
-    audioElement.currentTime = 0;
     makeAllPause();
-    masterPlay.classList.remove("fa-pause-circle")
-    masterPlay.classList.add("fa-play-circle")
+    if(songIndex != 9){
+        songIndex += 1;
+        audioElement.currentTime = 0;
+        masterPlay.classList.remove("fa-play-circle")
+        masterPlay.classList.add("fa-pause-circle")
+        let e = document.getElementById(`${songIndex}`);
+        e.classList.remove("fa-play-circle")
+        e.classList.add("fa-pause-circle");
+        audioElement.src = `songs/${songIndex}.mp3`;
+        audioElement.play()
+    }
+    else{
+        audioElement.currentTime = 0;
+        masterPlay.classList.remove("fa-pause-circle")
+        masterPlay.classList.add("fa-play-circle")
+    }
 });
+
+audioElement.addEventListener("playing",function(){
+    songInfoName.innerText = songs[songIndex-1].songName;
+})
