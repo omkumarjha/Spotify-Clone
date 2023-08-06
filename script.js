@@ -1,4 +1,5 @@
 let songIndex = 1; // abhi 0th song ko process kar rahe hai 
+let isSongItemPlayClicked = false;
 
 let audioElement = new Audio("songs/1.mp3");
 let masterPlay = document.getElementById("masterPlay")
@@ -8,7 +9,7 @@ let songItems = document.getElementsByClassName("songItem");
 let songitemPlay = document.getElementsByClassName("songitemPlay");
 let songInfoName = document.getElementsByClassName("songInfoName")[0];
 
-myProgressBar.value = 0; // jaise uper pehli baar website pe aayega to usse progress baar 0 mai milega
+myProgressBar.value = 0; // jaise user pehli baar website pe aayega to usse progress baar 0 mai milega
 
 // jab hum play and pause button pe click karenge to ganna bajna and ruk jaana chahiye
 masterPlay.addEventListener("click",function(){
@@ -20,6 +21,7 @@ masterPlay.addEventListener("click",function(){
         let e = document.getElementById(`${songIndex}`);
         e.classList.remove("fa-play-circle")
         e.classList.add("fa-pause-circle");
+        isSongItemPlayClicked = false;
     }
     else{
         audioElement.pause();
@@ -27,6 +29,7 @@ masterPlay.addEventListener("click",function(){
         masterPlay.classList.add("fa-play-circle")
         gif.style.opacity = 0;
         makeAllPause();
+        isSongItemPlayClicked = false;
     }
 })
 
@@ -34,9 +37,15 @@ masterPlay.addEventListener("click",function(){
 // audioElement.currentTime -> yeh batata hai ki video current kis time and sec pe chal rahi hai 
 
 // jab audio play hoga to uska time change hota rahega to ussi ko yaha listen kiya jaa raha hai 
+
 audioElement.addEventListener("timeupdate",function(){
-    let progress = (audioElement.currentTime/audioElement.duration)*100;
-    myProgressBar.value = progress;
+    if(isSongItemPlayClicked){
+        myProgressBar.value = "0"
+    }
+    else{
+        let progress = (audioElement.currentTime/audioElement.duration)*100;
+        myProgressBar.value = progress
+    }
 })
 
 // jaise jaise progress baar change hoga waise waise hum audio element ke current time ko set karte rahenge 
@@ -46,21 +55,22 @@ myProgressBar.addEventListener("change",function(){
 
 // below array har eak song ka name , path and uska logo contain karta hai 
 let songs = [
-    {songName : "Get Ready To Fight",filePath : "songs/1.mp3", coverPath : "covers/1.jpg"},
-    {songName : "Besabriyan - MS Dhoni",filePath : "songs/2.mp3", coverPath : "covers/2.jpg"},
-    {songName : "Brother Anthem",filePath : "songs/3.mp3", coverPath : "covers/3.jpg"},
-    {songName : "Chak Lein De",filePath : "songs/4.mp3", coverPath : "covers/4.jpg"},
-    {songName : "Sulthan - KGF",filePath : "songs/5.mp3", coverPath : "covers/5.jpg"},
-    {songName : "Tu Bhag Milkha",filePath : "songs/6.mp3", coverPath : "covers/6.jpg"},
-    {songName : "Parwa Nahin",filePath : "songs/7.mp3", coverPath : "covers/7.jpg"},
-    {songName : "Kar har Maidan Fateh",filePath : "songs/8.mp3", coverPath : "covers/8.jpg"},
-    {songName : "Sutan - Premium",filePath : "songs/9.mp3", coverPath : "covers/9.jpg"},
+    {songName : "Get Ready To Fight",filePath : "songs/1.mp3", coverPath : "covers/1.jpg",timeDuraion : "3:24"},
+    {songName : "Besabriyan - MS Dhoni",filePath : "songs/2.mp3", coverPath : "covers/2.jpg",timeDuraion : "4:15"},
+    {songName : "Brother Anthem",filePath : "songs/3.mp3", coverPath : "covers/3.jpg",timeDuraion : "5:53"},
+    {songName : "Chak Lein De",filePath : "songs/4.mp3", coverPath : "covers/4.jpg",timeDuraion : "4:25"},
+    {songName : "Sulthan - KGF",filePath : "songs/5.mp3", coverPath : "covers/5.jpg",timeDuraion : "3:37"},
+    {songName : "Tu Bhag Milkha",filePath : "songs/6.mp3", coverPath : "covers/6.jpg",timeDuraion : "4:39"},
+    {songName : "Parwa Nahin",filePath : "songs/7.mp3", coverPath : "covers/7.jpg",timeDuraion : "4:02"},
+    {songName : "Kar har Maidan Fateh",filePath : "songs/8.mp3", coverPath : "covers/8.jpg",timeDuraion : "5:11"},
+    {songName : "Sutan - Premium",filePath : "songs/9.mp3", coverPath : "covers/9.jpg",timeDuraion : "4:40"},
 ]
 
 // Iterating to every song item and setting its name , song and its cover
 Array.from(songItems).forEach(function(element,index){
     element.getElementsByTagName("img")[0].src = songs[index].coverPath;
     element.getElementsByClassName("songName")[0].innerText = songs[index].songName;
+    element.getElementsByClassName("timestamp")[0].innerText = songs[index].timeDuraion;
 })
 
 
@@ -76,6 +86,7 @@ const makeAllPause = ()=>{
 Array.from(songitemPlay).forEach((element)=>{
     element.addEventListener("click",function(e){
         let alreadyPlay = e.target.classList.contains("fa-pause-circle");
+        
 
         makeAllPause();
 
@@ -89,6 +100,8 @@ Array.from(songitemPlay).forEach((element)=>{
             gif.style.opacity = 0;
             masterPlay.classList.remove("fa-pause-circle")
             masterPlay.classList.add("fa-play-circle")
+            audioElement.currentTime = 0;
+            isSongItemPlayClicked = true;
         }
         else{ // agar already play nhi ho raha to play karo 
             e.target.classList.remove("fa-play-circle")
@@ -97,7 +110,9 @@ Array.from(songitemPlay).forEach((element)=>{
             masterPlay.classList.remove("fa-play-circle");
             masterPlay.classList.add("fa-pause-circle");
             gif.style.opacity = 1;
+            isSongItemPlayClicked = false;
         }
+        
         // hum play karna bolte hai to class ke hisab se pause karna hota hai and vice versa .
     })
 })
@@ -140,7 +155,7 @@ document.getElementById("next").addEventListener("click",function(){
     masterPlay.classList.add("fa-pause-circle");
 })
 
-// below event tak triggeer hoga jab song finish ho jayega
+// below event tab triggeer hoga jab song finish ho jayega
 audioElement.addEventListener("ended", function(){
     makeAllPause();
     if(songIndex != 9){
@@ -158,9 +173,11 @@ audioElement.addEventListener("ended", function(){
         audioElement.currentTime = 0;
         masterPlay.classList.remove("fa-pause-circle")
         masterPlay.classList.add("fa-play-circle")
+        gif.style.opacity = 0;
     }
 });
 
+// just jaise song play hona start hua tab below event trigger ho jayega
 audioElement.addEventListener("playing",function(){
     songInfoName.innerText = songs[songIndex-1].songName;
 })
