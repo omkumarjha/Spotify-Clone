@@ -18,6 +18,7 @@ body {
     align-items: center;
     color: white;
     height: 50px;
+    position: relative;
 }
 
 #navbar ul {
@@ -49,7 +50,7 @@ body {
 
 .container {
     min-height: 70vh;
-    width: 70%;
+    max-width: 70%;
     background-color: black;
     color: white;
     margin: 20px auto;
@@ -57,6 +58,8 @@ body {
     background-image: url("bg.jpg");
     background-position: center;
     padding: 15px;
+    box-shadow: 5px 5px 9px 10px black;
+    background-repeat: no-repeat;
 }
 
 h1{
@@ -107,6 +110,7 @@ input[id="myProgressBar"] {
     border-radius: 30px;
     height: 35px;
     font-family: 'Balsamiq Sans', cursive;
+    box-sizing: border-box;
 }
 
 .songItem img {
@@ -120,8 +124,8 @@ input[id="myProgressBar"] {
 }
 
 .songInfo{
-    position: absolute;
-    left: 14vw;
+    position: relative;
+    right: 20px;
 }
 
 .songInfo img{
